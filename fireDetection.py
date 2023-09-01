@@ -4,14 +4,10 @@ import cv2
 import math
 from Smail import send_email
 
-cap = cv2.VideoCapture(0)
 model = YOLO("fireModel.pt")
-
 classnames = ["fire"]
 
-while True:
-    ret, frame = cap.read()
-    frame = cv2.resize(frame,(640,480))
+def fire(frame):
     result = model(frame,stream=True)
     EMstatus = False
     
@@ -25,13 +21,9 @@ while True:
                 x1,y1,x2,y2 = box.xyxy[0]
                 x1,y1,x2,y2 = int(x1),int(y1),int(x2),int(y2)
                 cv2.rectangle(frame,(x1,y1),(x2,y2),(0,0,255),5)
-                cvzone.putTextRect(frame, f'{classnames[Class]} {confidence}%', [x1+8,y1+100], scale=1.5, thickness=2)
-            if confidence>30:
+                cvzone.putTextRect(frame, f'{classnames[Class]} {confidence}%', [x1-8,y1-10], scale=1.5, thickness=2)
+            if confidence>30 and EMstatus == False:
                 send_email()
                 EMstatus = True
-    cv2.imshow("frame", frame)
-    if cv2.waitKey(20) & 0xFF==ord("p"):
-            break
 
-frame.release()
-cv2.destroyAllWindows
+    return frame
