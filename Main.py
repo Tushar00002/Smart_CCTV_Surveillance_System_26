@@ -4,6 +4,7 @@ from PIL import ImageTk ,Image
 import cv2
 from faceDetection import face
 from fireDetection import fire
+from smokeDetection import smoke
 from recording import record
 
 window = ctk.CTk()
@@ -63,6 +64,8 @@ class streamer:
             if switch_var_2.get() == "on":
                 fire(frame)
             if switch_var_3.get() == "on":
+                smoke(frame)
+            if switch_var_4.get() == "on":
                 record(frame)
             photo = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)))
             lmain.photo = photo
@@ -81,16 +84,18 @@ animated_panel = SlidePanel(window, 1.0, 0.85)
 switch_var_1 = ctk.StringVar(value="off")
 switch_var_2 = ctk.StringVar(value="off")
 switch_var_3 = ctk.StringVar(value="off")
+switch_var_4 = ctk.StringVar(value="off")
 
+ctk.CTkLabel(animated_panel, text="Select Features").pack(padx=20,pady=20)
 switch_1 = ctk.CTkSwitch(animated_panel, text="Face Detection", variable=switch_var_1,onvalue="on",offvalue="off")
 switch_1.pack(padx=20,pady=10)
 switch_2 = ctk.CTkSwitch(animated_panel, text="Fire Detection", variable=switch_var_2,onvalue="on",offvalue="off")
 switch_2.pack(padx=20,pady=10)
 switch_3 = ctk.CTkSwitch(animated_panel, text="Video Recording", variable=switch_var_3,onvalue="on",offvalue="off")
 switch_3.pack(padx=20,pady=10)
+switch_4 = ctk.CTkSwitch(animated_panel, text="Video Recording", variable=switch_var_3,onvalue="on",offvalue="off")
+switch_4.pack(padx=20,pady=10)
     
-ctk.CTkLabel(animated_panel, text="Label 1").pack(expand=True,fill="both",padx=2,pady=10)
-ctk.CTkLabel(animated_panel, text="Label 2").pack(expand=True,fill="both",padx=2,pady=10)
 ctk.CTkButton(animated_panel, text="Button").pack(expand=True,fill="both",pady=10)
 
 button_1 = ctk.CTkButton(window, text="Features Tab",command=animated_panel.animate)
