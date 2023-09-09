@@ -1,4 +1,5 @@
 from ultralytics import YOLO
+from threading import Thread
 import cvzone
 import cv2
 import math
@@ -10,7 +11,7 @@ classnames = ["fire"]
 def fire(frame):
     result = model(frame,stream=True)
     EMstatus = False
-    
+    thread1 = Thread(target=send_email)
     for info in result:
         boxes = info.boxes
         for box in boxes:
@@ -23,7 +24,7 @@ def fire(frame):
                 cv2.rectangle(frame,(x1,y1),(x2,y2),(0,0,255),5)
                 cvzone.putTextRect(frame, f'{classnames[Class]} {confidence}%', [x1-8,y1-10], scale=1.5, thickness=2)
             if confidence>30 and EMstatus == False:
-                send_email()
+                thread1.start()
                 EMstatus = True
 
     return frame
