@@ -2,10 +2,10 @@ from tkinter import *
 import customtkinter as ctk
 from PIL import ImageTk ,Image
 import cv2
-from faceDetection import face
+from faceDetection import face, faceCounter
 from fireDetection import fire
 from smokeDetection import smoke
-from recording import record
+
 
 window = ctk.CTk()
 window.geometry("1280x720")
@@ -66,7 +66,7 @@ class streamer:
             if switch_var_3.get() == "on":
                 smoke(frame)
             if switch_var_4.get() == "on":
-                record(frame)
+                faceCounter(frame)
             photo = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)))
             lmain.photo = photo
             lmain.configure(image=photo)
@@ -91,9 +91,9 @@ switch_1 = ctk.CTkSwitch(animated_panel, text="Face Detection", variable=switch_
 switch_1.pack(padx=20,pady=10)
 switch_2 = ctk.CTkSwitch(animated_panel, text="Fire Detection", variable=switch_var_2,onvalue="on",offvalue="off")
 switch_2.pack(padx=20,pady=10)
-switch_3 = ctk.CTkSwitch(animated_panel, text="Video Recording", variable=switch_var_3,onvalue="on",offvalue="off")
+switch_3 = ctk.CTkSwitch(animated_panel, text="Smoke Detection", variable=switch_var_3,onvalue="on",offvalue="off")
 switch_3.pack(padx=20,pady=10)
-switch_4 = ctk.CTkSwitch(animated_panel, text="Video Recording", variable=switch_var_3,onvalue="on",offvalue="off")
+switch_4 = ctk.CTkSwitch(animated_panel, text="People Counter", variable=switch_var_3,onvalue="on",offvalue="off")
 switch_4.pack(padx=20,pady=10)
     
 ctk.CTkButton(animated_panel, text="Button").pack(expand=True,fill="both",pady=10)
