@@ -5,7 +5,7 @@ import cv2
 from faceDetection import face, faceCounter
 from fireDetection import fire
 from smokeDetection import smoke
-
+from record import record
 
 window = ctk.CTk()
 window.geometry("1280x720")
@@ -67,6 +67,8 @@ class streamer:
                 smoke(frame)
             if switch_var_4.get() == "on":
                 faceCounter(frame)
+            if switch_var_5.get() == "on":
+                 record(frame)
             photo = ImageTk.PhotoImage(image=Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)))
             lmain.photo = photo
             lmain.configure(image=photo)
@@ -85,6 +87,8 @@ switch_var_1 = ctk.StringVar(value="off")
 switch_var_2 = ctk.StringVar(value="off")
 switch_var_3 = ctk.StringVar(value="off")
 switch_var_4 = ctk.StringVar(value="off")
+switch_var_5 = ctk.StringVar(value="off")
+
 
 ctk.CTkLabel(animated_panel, text="Select Features").pack(padx=20,pady=20)
 switch_1 = ctk.CTkSwitch(animated_panel, text="Face Detection", variable=switch_var_1,onvalue="on",offvalue="off")
@@ -95,6 +99,8 @@ switch_3 = ctk.CTkSwitch(animated_panel, text="Smoke Detection", variable=switch
 switch_3.pack(padx=20,pady=10)
 switch_4 = ctk.CTkSwitch(animated_panel, text="People Counter", variable=switch_var_3,onvalue="on",offvalue="off")
 switch_4.pack(padx=20,pady=10)
+switch_5 = ctk.CTkSwitch(animated_panel, text="Recorder", variable=switch_var_5,onvalue="on",offvalue="off")
+switch_5.pack(padx=20,pady=10)
     
 ctk.CTkButton(animated_panel, text="Button").pack(expand=True,fill="both",pady=10)
 
