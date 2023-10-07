@@ -1,17 +1,24 @@
 from ultralytics import YOLO
-from threading import Thread
+
 import cvzone
 import cv2
+import datetime
+import os
 import math
 from Smail import send_email
 
 model = YOLO("fireModel.pt")
 classnames = ["fire"]
+email_sent = False
 
 def fire(frame):
+    output_folder = "Captured"
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+        
     result = model(frame,stream=True)
-    EMstatus = False
-    thread1 = Thread(target=send_email)
+    global email_sent
+    
     for info in result:
         boxes = info.boxes
         for box in boxes:
@@ -21,10 +28,14 @@ def fire(frame):
             if confidence>10:
                 x1,y1,x2,y2 = box.xyxy[0]
                 x1,y1,x2,y2 = int(x1),int(y1),int(x2),int(y2)
-                cv2.rectangle(frame,(x1,y1),(x2,y2),(0,0,255),5)
-                cvzone.putTextRect(frame, f'{classnames[Class]} {confidence}%', [x1-8,y1-10], scale=1.5, thickness=2)
-            if confidence>30 and EMstatus == False:
-                thread1.start()
-                EMstatus = True
+                cv2.rectangle(frame,(x1,y1),(x2,y2),(0,255,0),5)
+                cvzone.putTextRect(frame, f'{classnames[Class]}', [x1-8,y1-10], scale=1.5, thickness=2)
+            if confidence>70 and not email_sent:
+               timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                output_path = os.path.join(output_folder, f"face_{timestamp}.jpg")
+                cv2.imwrite(output_path, frame)
+                email_sent = True
+                message = "Fire Alert"
+                send_email(message,output_path)
 
     return frame
