@@ -26,7 +26,7 @@ def send_email(message,image_filename):
 
         server.ehlo()
         server.starttls()
-        server.login(sender_email, 'nkdnlfliltredjov')
+        server.login(sender_email, 'password')
         msg=MIMEMultipart()
         msg["subject"] = subject
         msg["From"]=sender_email
