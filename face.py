@@ -3,28 +3,38 @@ import cv2
 import os
 import math
 
-def load_known_faces(known_faces_folder):
-    known_face_encodings = []
-    known_face_names = []
+def face():
+    def load_known_faces(known_faces_folder):
+        known_face_encodings = []
+        known_face_names = []
 
-    for file in os.listdir(known_faces_folder):
-        image = face_recognition.load_image_file(os.path.join(known_faces_folder, file))
-        face_locations = face_recognition.face_locations(image, number_of_times_to_upsample=2)  
-        if len(face_locations) == 0:
-            print(f"No face found in {file}. Skipping...")
-            continue
+        for file in os.listdir(known_faces_folder):
+            image = face_recognition.load_image_file(os.path.join(known_faces_folder, file))
+            face_locations = face_recognition.face_locations(image, number_of_times_to_upsample=2)  
+            if len(face_locations) == 0:
+                print(f"No face found in {file}. Skipping...")
+                continue
 
-        face_encoding = face_recognition.face_encodings(image, face_locations)[0]
-        known_face_encodings.append(face_encoding)
-        known_face_names.append(file.split('.')[0])
+            face_encoding = face_recognition.face_encodings(image, face_locations)[0]
+            known_face_encodings.append(face_encoding)
+            known_face_names.append(file.split('.')[0])
 
-    return known_face_encodings, known_face_names
+        return known_face_encodings, known_face_names
 
-def main(camera_source):
+    def face_confidence(face_distance):
+        range=(1.0-0.6)
+        linear_val=(1.0-face_distance)/(range*2.0)
+        if face_distance > 0.6:
+            return str(round(linear_val*100, 2))+'%'
+        else:
+            value=(linear_val+((1.0-linear_val)*math.pow((linear_val-0.5)*2, 0.2)))*100
+            return str(round(value, 2))+'%'
+
     known_faces_folder = "known_faces"
-    video_capture = cv2.VideoCapture(camera_source)
+    video_capture = cv2.VideoCapture(0)  
 
     known_face_encodings, known_face_names = load_known_faces(known_faces_folder)
+    cv2.namedWindow("Video", cv2.WINDOW_GUI_NORMAL)
 
     while True:
         ret, frame = video_capture.read()
@@ -57,22 +67,5 @@ def main(camera_source):
     video_capture.release()
     cv2.destroyAllWindows()
 
-def face_confidence(face_distance):
-    range=(1.0-0.6)
-    linear_val=(1.0-face_distance)/(range*2.0)
-    if face_distance > 0.6:
-        return str(round(linear_val*100, 2))+'%'
-    else:
-        value=(linear_val+((1.0-linear_val)*math.pow((linear_val-0.5)*2, 0.2)))*100
-        return str(round(value, 2))+'%'
-
 if __name__ == "__main__":
-    camera_source = input("Enter '0' to use the webcam or '1' to use an external camera: ")
-    try:
-        camera_source = int(camera_source)
-        if camera_source == 0 or camera_source == 1:
-            main(camera_source)
-        else:
-            print("Invalid input. Please enter '0' or '1' to select the camera source.")
-    except ValueError:
-        print("Invalid input. Please enter '0' or '1' to select the camera source.")
+    face()
