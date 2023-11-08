@@ -1,0 +1,9 @@
+customtkinter==5.2.0
+cvzone==1.5.6
+opencv_contrib_python==4.8.0.74
+opencv_python==4.8.0.74
+Pillow==9.5.0
+ultralytics==8.0.163
+python-docx==1.0.1
+numpy==1.26.1
+imutils==0.5.4
